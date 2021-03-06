@@ -1,5 +1,5 @@
 {
-  "name": "Employee_Tracker",
+  "name": "employee_tracker",
   "version": "1.0.0",
   "description": "![license](https://img.shields.io/github/license/raquellee/employee_tracker)<br />",
   "main": "index.js",
