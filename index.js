@@ -1,23 +1,94 @@
+const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: 'root',
+    database: 'company_db',
+});
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log(`connected as id ${connection.threadId}\n`);
+console.log("Welcome to your company database manager! Select an option below to get started.");
+    init();
+});
+
+const updateEmployeeRole = () => {
+    const query = connection.query(
+        'UPDATE employee SET ? WHERE ?',
+        // set column:value where column:value
+        // can be one object, or an array of updates
+        [
+        {
+        }
+        ],
+        (err, res) => {
+            if (err) throw err;
+            console.log(`${res.affectedRows} employees updated!\n`);
+            //nextfunc
+        }
+    );
+    console.log(query.sql);
+};
+
+const next = (choice) => {
+    switch (choice){
+        case "View All Employees":
+        console.table(answers);
+        break;
+        case "View All Roles":
+        console.table(answers);
+        break;
+        case "View All Departments":
+        console.table(answers);
+        break;
+        case "Add Employee":
+        init(employeeqs);
+        break;
+        case 'Add Role':
+        init(roleqs);
+        break;
+        case 'Add Department':
+        init(deptqs);
+        break;
+        case "Update Employee Role":
+        break;
+        case "Update Employee Role":
+
+            connection.end();
+
+
+    }
+}
+
+const init = () => {
+    inquirer.prompt(choices).then((data) => {
+        next(data.choice);
+    });
+
+};
 
 const choices = [
     {
         type: "list", 
-        message: "What would you like to do?",
-        name: "license",
+        message: "For Employees, Roes, or Departments:",
+        name: "actions",
         choices: [
-            "View All Employees",
-            "View All Roles",
             "View All Departments",
-            "Add Employee",
-            'Add Role',
+            "View All Roles",
+            "View All Employees",
             'Add Department',
+            'Add Role',
+            'Add Employee',
             "Update Employee Role",
+            "Exit"
         ]
-}
+    }
 ];
-
-// add employee
 const employeeqs = [
     { 
         type: "input",
@@ -33,9 +104,13 @@ const employeeqs = [
         type: "input",
         message: "What is the employee's role?",
         name: "role"
+    },
+    { 
+        type: "input",
+        message: "What is the employee's manager's ID?",
+        name: "role"
     }
-   //manager ID 
-];
+];  
 
 const roleqs = [
     {
@@ -59,34 +134,64 @@ const departmentqs = [
     {
         type: "input",
         message: "What is the department name?",
-        name: "first"
+        name: "deptName"
     }
 ];
+const createEmployee = () => {
+    const query = connection.query(
+        'INSERT INTO employees SET ?',
+        {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: answer.roleId
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log(`${res.affectedRows} employee inserted!\n`);
+        }
+    );
+    console.log(query.sql);
 
-const menu = [
-    {
-        type: "list", 
-        message: "What would you like to do?",
-        name: "license",
-        choices: [
-        "Sales Lead",
-        "Salesperson",
-        "Lead Engineer",
-        "Software Engineer",
-        'Account Manager',
-        'Accountant',
-        "Legal Team Lead",
-        ]  
-    }
-];
+};const createDepartment = () => {
+    const query = connection.query(
+        'INSERT INTO departments SET ?',
+        {
 
-inquirer.prompt().then((data));
-// funcs for specific SQL queries
-// constructor function or classs
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log(`${res.affectedRows} employee inserted!\n`);
+        }
+    );
+    console.log(query.sql);
 
-//ANSWERS
-// insert into / values
+};const createRole = () => {
+    const query = connection.query(
+        'INSERT INTO roles SET ?',
+        {
 
-//inner, left, right joins
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log(`${res.affectedRows} employee inserted!\n`);
+        }
+    );
+    console.log(query.sql);
+};
 
-// returned data about employees from user request
+const readTable = () => {
+    connection.query('SELECT * FROM employees', (err, res) => {
+        if (err) throw err;
+        console.log(res);
+    });
+};const readProducts = () => {
+    connection.query('SELECT * FROM roles', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+    });
+};const readProducts = () => {
+    connection.query('SELECT * FROM departments', (err, res) => {
+        if (err) throw err;
+        console.log(res);
+    });
+};

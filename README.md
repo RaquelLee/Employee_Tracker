@@ -7,10 +7,16 @@
 * console.table
 * Node.js
 
+## Installation
+This application can be invoked by using the following command:
+
+```bash
+node index.js
+```
 ## :cinema:  Usage
+![functionalitygif]()
 
-![screenies]()
-
+[View Demo Video]()
 
 ## :busts_in_silhouette:  Credits 
 Raquel Scofield ![followme](https://img.shields.io/github/followers/raquellee?label=Follow&style=social)
