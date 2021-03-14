@@ -26,7 +26,6 @@ const updateEmpRole = () => {
             (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} employee updated!\n`);
-                init();
             }
         );
         console.log(query.sql);
