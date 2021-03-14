@@ -221,7 +221,7 @@ const readDepts = () => {
 };
 
 const readEmps = () => {
-    connection.query('SELECT t1.id, t1.first_name, t1.last_name, t2.title, t2.salary, t3.first_name, t3.last_name FROM employees t1 LEFT JOIN roles t2 ON t1.role_id = t2.id left join employees t3 on t1.manager_id = t3.id', (err, res) => {
+    connection.query('SELECT t1.id, t1.first_name, t1.last_name, t2.title, t2.salary, t3.first_name AS ManagerFirst, t3.last_name AS ManagerLast FROM employees t1 LEFT JOIN roles t2 ON t1.role_id = t2.id left join employees t3 on t1.manager_id = t3.id', (err, res) => {
         if (err) throw err;
         console.table(res);
         init();
