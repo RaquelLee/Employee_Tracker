@@ -14,9 +14,9 @@ This application can be invoked by using the following command:
 node index.js
 ```
 ## :cinema:  Usage
-![functionalitygif]()
+![functionalitygif](https://github.com/RaquelLee/Employee_Tracker/blob/main/assets/images/demo.gif)
 
-[View Demo Video]()
+[View Demo Video](https://drive.google.com/file/d/1vuslc31GH6MSAFa0WmqPdY-VZoLOEUHL/view)
 
 ## :busts_in_silhouette:  Credits 
 Raquel Scofield ![followme](https://img.shields.io/github/followers/raquellee?label=Follow&style=social)
