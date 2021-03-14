@@ -73,7 +73,7 @@ const init = () => {
 const choices = [
     {
         type: "list", 
-        message: "For Employees, Roes, or Departments:",
+        message: "Menu",
         name: "action",
         choices: [
             "View All Employees",
