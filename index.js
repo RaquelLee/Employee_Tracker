@@ -17,55 +17,55 @@ console.log("Welcome to your company database manager! Select an option below to
     init();
 });
 
-const updateEmployeeRole = () => {
-    const query = connection.query(
-        'UPDATE employee SET ? WHERE ?',
-        // set column:value where column:value
-        // can be one object, or an array of updates
-        [
-        {
-        }
-        ],
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} employees updated!\n`);
-            //nextfunc
-        }
-    );
-    console.log(query.sql);
+const updateEmpRole = () => {
+    inquirer.prompt(empRoleQs).then((answer) => {
+        const query = connection.query(
+            'UPDATE employees SET ? WHERE ?',
+            [{ role_id: answer.roleId },
+            { id: answer.empId}],
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} employee updated!\n`);
+                init();
+            }
+        );
+        console.log(query.sql);
+        init();
+    });
 };
 
 const next = (choice) => {
     switch (choice){
         case "View All Employees":
-        console.table(answers);
+        readEmps();
         break;
         case "View All Roles":
-        console.table(answers);
+        readRoles();
         break;
         case "View All Departments":
-        console.table(answers);
+        readDepts();
         break;
         case "Add Employee":
-        init(employeeqs);
+        createEmp();
         break;
         case 'Add Role':
-        init(roleqs);
+        createRole();
         break;
         case 'Add Department':
-        init(deptqs);
+        createDepartment();
         break;
         case "Update Employee Role":
+        updateEmpRole();
         break;
-        case "Update Employee Role":
-
-            connection.end();
+        case "Exit":
+        connection.end();
+        break;
     }
 }
 
 const init = () => {
     inquirer.prompt(choices).then((data) => {
-        next(data.actions);
+        next(data.action);
     });
 
 };
@@ -74,20 +74,32 @@ const choices = [
     {
         type: "list", 
         message: "For Employees, Roes, or Departments:",
-        name: "actions",
+        name: "action",
         choices: [
-            "View All Departments",
-            "View All Roles",
             "View All Employees",
-            'Add Department',
-            'Add Role',
+            "View All Roles",
+            "View All Departments",
             'Add Employee',
+            'Add Role',
+            'Add Department',
             "Update Employee Role",
             "Exit"
         ]
     }
 ];
-const employeeqs = [
+const empRoleQs = [
+    { 
+        type: "input",
+        message: "What is the employee's ID?",
+        name: "empId"
+    },    
+    { 
+        type: "input",
+        message: "What is the ID of the Employee's new role?",
+        name: "roleId"
+    }
+];  
+const empQs = [
     { 
         type: "input",
         message: "What is the employee's first name?",
@@ -100,13 +112,13 @@ const employeeqs = [
     },    
     { 
         type: "input",
-        message: "What is the employee's role?",
+        message: "What is the employee's role ID?",
         name: "role"
     },
     { 
         type: "input",
         message: "What is the employee's manager's ID?",
-        name: "role"
+        name: "manager"
     }
 ];  
 
@@ -114,88 +126,104 @@ const roleqs = [
     {
         type: "input",
         message: "What is the role title?",
-        name: "first"
+        name: "roleTitle"
     },
     {       
         type: "input",
         message: "What is the role salary?",
-        name: "first"
+        name: "roleSalary"
     },
     {     
         type: "input",
         message: "ID for the department the role belongs to?",
-        name: "first"
+        name: "roleDeptId"
     }
 ];
 
-const departmentqs = [
+const deptqs = [
     {
         type: "input",
         message: "What is the department name?",
         name: "deptName"
     }
 ];
-const createEmployee = () => {
-    const query = connection.query(
-        'INSERT INTO employees SET ?',
-        {
-            first_name: answer.firstName,
-            last_name: answer.lastName,
-            role_id: answer.roleId
-        },
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} employee inserted!\n`);
-        }
-    );
-    console.log(query.sql);
-
-};
 
 const createDepartment = () => {
-    const query = connection.query(
-        'INSERT INTO departments SET ?',
-        {
-            dept_name: answer.deptname
-        },
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} Department inserted!\n`);
-        }
-    );
-    console.log(query.sql);
+    inquirer.prompt(deptqs).then((answer) => {
+        const query = connection.query(
+            'INSERT INTO departments SET ?',
+            {
+                dept_name: answer.deptName
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} Department inserted!\n`);
+            }
+        );
+        console.log(query.sql);
+        init();
+    });
+};
 
+const createEmp = () => {
+    inquirer.prompt(empQs).then((answer) => {
+        const query = connection.query(
+            'INSERT INTO employees SET ?',
+            {
+                first_name: answer.first,
+                last_name: answer.last,
+                role_id: answer.role,
+                manager_id: answer.manager
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} employee inserted!\n`);
+            }
+        );
+        console.log(query.sql);
+        init();
+    });
 };
 
 const createRole = () => {
-    const query = connection.query(
-        'INSERT INTO roles SET ?',
-        {
-            title: answer.title,
-            salary: answer.salary,
-            department_id: answer.deptId
-        },
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} employee inserted!\n`);
-        }
-    );
-    console.log(query.sql);
+    inquirer.prompt(roleqs).then((answer) => {
+        const query = connection.query(
+            'INSERT INTO roles SET ?',
+            {
+                title: answer.roleTitle,
+                salary: answer.roleSalary,
+                department_id: answer.roleDeptId
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} role inserted!\n`);
+            }
+        );
+        console.log(query.sql);
+        init();
+    });
 };
 
-const readTable = () => {
-    connection.query('SELECT * FROM employees', (err, res) => {
+const readDepts = () => {
+    connection.query('SELECT * FROM departments', (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
+        init();
     });
-};const readProducts = () => {
+
+};const readRoles = () => {
     connection.query('SELECT * FROM roles', (err, res) => {
         if (err) throw err;
         console.table(res);
+        init();
     });
-};const readProducts = () => {
-    connection.query('SELECT * FROM departmentggs', (err, res) => {
+
+};
+
+const readEmps = () => {
+    connection.query('SELECT t1.id, t1.first_name, t1.last_name, t2.title, t2.salary, t3.first_name, t3.last_name FROM employees t1 LEFT JOIN roles t2 ON t1.role_id = t2.id left join employees t3 on t1.manager_id = t3.id', (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
+        init();
     });
 };
