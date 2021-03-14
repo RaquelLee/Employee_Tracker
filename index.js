@@ -60,14 +60,12 @@ const next = (choice) => {
         case "Update Employee Role":
 
             connection.end();
-
-
     }
 }
 
 const init = () => {
     inquirer.prompt(choices).then((data) => {
-        next(data.choice);
+        next(data.actions);
     });
 
 };
@@ -152,24 +150,30 @@ const createEmployee = () => {
     );
     console.log(query.sql);
 
-};const createDepartment = () => {
+};
+
+const createDepartment = () => {
     const query = connection.query(
         'INSERT INTO departments SET ?',
         {
-
+            dept_name: answer.deptname
         },
         (err, res) => {
             if (err) throw err;
-            console.log(`${res.affectedRows} employee inserted!\n`);
+            console.log(`${res.affectedRows} Department inserted!\n`);
         }
     );
     console.log(query.sql);
 
-};const createRole = () => {
+};
+
+const createRole = () => {
     const query = connection.query(
         'INSERT INTO roles SET ?',
         {
-
+            title: answer.title,
+            salary: answer.salary,
+            department_id: answer.deptId
         },
         (err, res) => {
             if (err) throw err;
@@ -190,7 +194,7 @@ const readTable = () => {
         console.table(res);
     });
 };const readProducts = () => {
-    connection.query('SELECT * FROM departments', (err, res) => {
+    connection.query('SELECT * FROM departmentggs', (err, res) => {
         if (err) throw err;
         console.log(res);
     });
